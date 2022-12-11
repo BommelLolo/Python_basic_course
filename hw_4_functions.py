@@ -12,7 +12,9 @@ def largest_of_two_numbers(num1: float = 0, num2: float = 0) -> float:
     return float(result)
 
 
-def smallest_of_three_numbers(num1: float = 0, num2: float = 0, num3: float = 0) -> float:
+def smallest_of_three_numbers(num1: float = 0,
+                              num2: float = 0,
+                              num3: float = 0) -> float:
     """Compare three numbers and return the smallest."""
     if num1 < num2 and num1 < num3:
         result = num1
@@ -30,7 +32,7 @@ def abs_of_number(num: float = 0) -> float:
     return num
 
 
-def sum_of_two_numbers(num1: float = 0, num2: float = 0) -> float:
+def sum_of_two_numbers(num1: float = 0, num2: float = 0):
     """Print the sum of two numbers."""
     print(f"The sum of 1st and 2nd numbers is {num1 + num2}")
 
