@@ -11,13 +11,12 @@ def retry(attempts: int = 5, desired_value: any = None):
             for attempt in range(attempts):
                 res = func(*args, **kwargs)
                 # print("№", attempt+1, "-> func=", res, "equal?", "desired", desired_value)
-                func_res = [res]
-                if desired_value in func_res:
+                if res == desired_value:
                     print("The desired value", desired_value,
                           "was achieved in", attempt+1, "attempt(s)")
                     # print("res=", res)
                     return res
-            return print("Failure! Desired value wasn't achieved. Out of attempts")
+            print("Failure! Desired value wasn't achieved. Out of attempts")
         return inner_wrapper
     return wrapper
 
