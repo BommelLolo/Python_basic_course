@@ -33,13 +33,15 @@ def get_ranges_wo_insurance(insurance_periods: list[DateRange]) -> list[DateRang
     if len(insurance_periods) > 1:
 
         # sort list of all insurance's periods for begin date from earlier to later
-        for i in range(len(insurance_periods)):
+        # for i in range(len(insurance_periods)):
+        for i, _ in enumerate(insurance_periods):
             min_date = i
             for j in range(i+1, len(insurance_periods)):
                 if insurance_periods[j].date_begin < insurance_periods[min_date].date_begin:
                     min_date = j
 
-            insurance_periods[min_date], insurance_periods[i] = insurance_periods[i], insurance_periods[min_date]
+            insurance_periods[min_date], insurance_periods[i] = \
+                insurance_periods[i], insurance_periods[min_date]
 
         # check periods w/o insurance
         for k in range(len(insurance_periods)-1):
