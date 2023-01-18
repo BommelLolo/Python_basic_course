@@ -28,8 +28,7 @@ class Course:
         number -= 1
         if number in range(self.number_of_lectures):
             return self.lectures[number]
-        else:
-            raise AssertionError('Invalid lecture number', )
+        raise AssertionError('Invalid lecture number', )
 
     def get_homeworks(self):
         return self.homeworks
@@ -114,17 +113,16 @@ class Teacher:
         # check, has the student done this hw
         if student not in homework.who_done:
             raise ValueError('Student never did that homework', )
-        else:
-            # check, that teacher check hw at first
-            if homework.who_done[student] is not None:
-                raise ValueError('You already checked that homework', )
-            else:
-                if mark in range(0, 101):
-                    homework.who_done[student] = mark
-                    self.homeworks_to_check.remove(homework)
-                    return homework.who_done
-                else:
-                    raise AssertionError('Invalid mark', )
+
+        # check, that teacher check hw at first
+        if homework.who_done[student] is not None:
+            raise ValueError('You already checked that homework', )
+
+        if mark in range(0, 101):
+            homework.who_done[student] = mark
+            self.homeworks_to_check.remove(homework)
+            return homework.who_done
+        raise AssertionError('Invalid mark', )
 
 
 if __name__ == '__main__':
