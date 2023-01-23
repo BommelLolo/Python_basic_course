@@ -4,31 +4,34 @@ from things_to_test_hw import search_in_file
 
 
 class TestSearchInFile(unittest.TestCase):
+    filename = 'for_test.txt'
+
+    def setUp(self):
+        with open(self.filename, 'w') as file:
+            file.write('')
+
+    def tearDown(self):
+        os.remove(self.filename)
 
     def test_negative(self):
-        filename = 'for_test.txt'
+        other_filename = 'other_file.txt'
         with self.assertRaises(FileNotFoundError):
-            search_in_file(filename, 'pattern')
+            search_in_file(other_filename, 'pattern')
 
-    def test_positive(self):
-        filename = 'for_test.txt'
-        text = 'party pattern patient'
-        with open(filename, 'w') as file:
-            file.write(text)
-        self.assertEqual([text], search_in_file(filename, 'pattern'))
-        os.remove(filename)
-
-        filename = 'for_test.txt'
-        text = "party\n123 pattern \npatient"
-        with open(filename, 'w') as file:
-            file.write(text)
-        self.assertEqual(["123 pattern \n"], search_in_file(filename, 'pattern'))
-        os.remove(filename)
-
-        filename = 'for_test.txt'
+    def test_positive_1(self):
         text = ""
-        with open(filename, 'w') as file:
+        with open(self.filename, 'a') as file:
             file.write(text)
-        self.assertEqual([], search_in_file(filename, 'pattern'))
-        os.remove(filename)
-        
+        self.assertEqual([], search_in_file(self.filename, 'pattern'))
+
+    def test_positive_2(self):
+        text = 'party pattern patient'
+        with open(self.filename, 'a') as file:
+            file.write(text)
+        self.assertEqual([text], search_in_file(self.filename, 'pattern'))
+
+    def test_positive_3(self):
+        text = "party\n123 pattern \npatient"
+        with open(self.filename, 'a') as file:
+            file.write(text)
+        self.assertEqual(["123 pattern \n"], search_in_file(self.filename, 'pattern'))
