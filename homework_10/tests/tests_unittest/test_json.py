@@ -5,36 +5,36 @@ from things_to_test_hw import add_from_json
 
 
 class TestAddFromJSON(unittest.TestCase):
+    FILENAME = 'test.json'
+    YOUR_PATH_TO_FILE = ''
+    path_to_file = os.path.join(YOUR_PATH_TO_FILE, FILENAME)
 
-    def test_negative_1(self):
+    def setUp(self):
+        data = {"a": 3, "b": -7, "c": 0}
+        with open(self.path_to_file, 'w', encoding='utf-8') as file:
+            json.dump(data, file)
+
+    def tearDown(self):
+        os.unlink(self.path_to_file)
+
+    def test_file_not_exist(self):
         keys = ['a', 'b']
         with self.assertRaises(FileNotFoundError):
-            add_from_json("test.json", keys)
+            add_from_json('not_existing_file', keys)
 
-    def test_negative_2(self):
+    def test_wrong_keys(self):
         keys = ['a', 'b', 'd']
         with self.assertRaises(KeyError):
-            add_from_json("example.json", keys)
+            add_from_json(self.path_to_file, keys)
 
-    def test_negative_3(self):
+    def test_invalid_data_in_args(self):
         data = {'a': 3, 'b': 'asc'}
-        filename = 'test.json'
-        with open(filename, 'w') as file:
+        with open(self.path_to_file, 'w', encoding='utf-8') as file:
             json.dump(data, file)
         with self.assertRaises(TypeError):
-            add_from_json(filename, data.keys())
-        os.unlink(filename)
+            add_from_json(self.path_to_file, data.keys())
 
-    def test_positive_1(self):
-        data = {'a': 3, 'b': 4}
-        filename = 'test.json'
-        with open(filename, 'w') as file:
-            json.dump(data, file)
-        res = add_from_json(filename, data.keys())
-        self.assertEqual(7, res)
-        os.unlink(filename)
-
-    def test_positive_2(self):
+    def test_add_from_json_positive(self):
         keys = ['a', 'b', 'c']
-        res = add_from_json("example.json", keys)
+        res = add_from_json(self.path_to_file, keys)
         self.assertEqual(-4, res)

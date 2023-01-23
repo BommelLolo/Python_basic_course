@@ -4,34 +4,39 @@ from things_to_test_hw import search_in_file
 
 
 class TestSearchInFile(unittest.TestCase):
-    filename = 'for_test.txt'
+    FILENAME = 'for_test.txt'
+    YOUR_PATH_TO_FILE = ''
+    path_to_file = os.path.join(YOUR_PATH_TO_FILE, FILENAME)
 
     def setUp(self):
-        with open(self.filename, 'w') as file:
+        with open(self.path_to_file, 'w', encoding='utf-8') as file:
             file.write('')
 
     def tearDown(self):
-        os.remove(self.filename)
+        os.remove(self.path_to_file)
 
-    def test_negative(self):
-        other_filename = 'other_file.txt'
+    def test_file_not_found(self):
         with self.assertRaises(FileNotFoundError):
-            search_in_file(other_filename, 'pattern')
+            search_in_file('other_file.txt', 'pattern')
 
-    def test_positive_1(self):
-        text = ""
-        with open(self.filename, 'a') as file:
+    # other variant for test
+    # def test_file_not_exist(self):
+    #     self.assertEqual(False, os.path.exists('not_existing_file'))
+
+    def test_with_empty_file(self):
+        text = ''
+        with open(self.path_to_file, 'a', encoding='utf-8') as file:
             file.write(text)
-        self.assertEqual([], search_in_file(self.filename, 'pattern'))
+        self.assertEqual([], search_in_file(self.path_to_file, 'pattern'))
 
-    def test_positive_2(self):
+    def test_single_line_in_file(self):
         text = 'party pattern patient'
-        with open(self.filename, 'a') as file:
+        with open(self.path_to_file, 'a', encoding='utf-8') as file:
             file.write(text)
-        self.assertEqual([text], search_in_file(self.filename, 'pattern'))
+        self.assertEqual([text], search_in_file(self.path_to_file, 'pattern'))
 
-    def test_positive_3(self):
-        text = "party\n123 pattern \npatient"
-        with open(self.filename, 'a') as file:
+    def test_multiple_lines_in_file(self):
+        text = 'party\n123 pattern \npatient'
+        with open(self.path_to_file, 'a', encoding='utf-8') as file:
             file.write(text)
-        self.assertEqual(["123 pattern \n"], search_in_file(self.filename, 'pattern'))
+        self.assertEqual(['123 pattern \n'], search_in_file(self.path_to_file, 'pattern'))
