@@ -21,22 +21,18 @@ class MathFunction:
         self.arg_2 = arg_2
         self.result = None
 
-    @property
     def add(self):
         self.result = self.arg_1 + self.arg_2
         return self.result
 
-    @property
     def subtract(self):
         self.result = self.arg_1 - self.arg_2
         return self.result
 
-    @property
     def divide(self):
         self.result = self.arg_1 / self.arg_2
         return self.result
 
-    @property
     def multiply(self):
         self.result = self.arg_1 * self.arg_2
         return self.result
@@ -67,7 +63,7 @@ if __name__ == '__main__':
     c = MathFunction(a_int, b_int)
 
     try:
-        getattr(c, method)
+        getattr(c, method)()
     except ZeroDivisionError:
         logger.exception('Tried to divide by 0')
         sys.exit(2)
