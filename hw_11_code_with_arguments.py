@@ -65,6 +65,7 @@ if __name__ == '__main__':
         sys.exit(2)
 
     c = MathFunction(a_int, b_int)
+
     try:
         getattr(c, method)
     except ZeroDivisionError:
