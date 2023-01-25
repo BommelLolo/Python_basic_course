@@ -1,52 +1,83 @@
 import logging
-import signal
 import sys
-import time
-
-"""
-Необхідно створити файл, що буде:
-- реалізовувати 4 функції, що виконують математичні операції (додавання, віднімання, ділення та множення);
-- приймати в себе аргументами значення, над якими треба виконати операцію (тобто саме 2 цілих числа);
-- вибір функції залежатиме від змінної середовища, що за замовчуванням буде вказувати на функцію add;
-- в разі наявності помилок введення (недоступне значення змінної середовища,
-некоректна кількість аргументів, аргументи не є цілими числами і тд), завершувати програму з кодом 2.
-
-Приклад виклику файлу:
-$ python your_homework.py 1 2
-3
-$ FUNCTION=multiply python your_homework.py 3 -7
--21
-"""
+import os
 
 
 logging.basicConfig(
-        filename='test.log',
-        filemode='a',
-        format='%(asctime)s,%(msecs)d %(levelname)s %(name)s [%(filename)s:%(lineno)d] %(message)s',
-        datefmt='%H:%M:%S',
-        level=logging.INFO,
-    )
+    filename='hw_11.log',
+    filemode='a',
+    format='%(asctime)s,%(msecs)d %(levelname)s %(name)s [%(filename)s] %(message)s',
+    datefmt='%H:%M:%S',
+    level=logging.INFO,
+)
 
 logger = logging.getLogger()
+method = os.environ.get('FUNCTION', 'add')
 
 
-def add(a, b):
-    pass
+class MathFunction:
+    def __init__(self, arg_1, arg_2):
+        self.arg_1 = arg_1
+        self.arg_2 = arg_2
+        self.result = None
+
+    def add(self):
+        self.result = self.arg_1 + self.arg_2
+        return self.result
+
+    def subtract(self):
+        self.result = self.arg_1 - self.arg_2
+        return self.result
+
+    def divide(self):
+        self.result = self.arg_1 / self.arg_2
+        return self.result
+
+    def multiply(self):
+        self.result = self.arg_1 * self.arg_2
+        return self.result
 
 
-def subtract(a, b):
-    pass
-
-
-def divide(a, b):
-    pass
-
-
-def multiply(a, b):
-    pass
+class InvalidDMethodError(Exception):
+    def __init__(self):
+        logger.error('Got invalid function name: %s', str(method))
+        sys.exit(2)
 
 
 if __name__ == '__main__':
+    # check function name
+    function = {'add', 'subtract', 'multiply', 'divide'}
+    if method not in function:
+        raise InvalidDMethodError()
 
-    x, y = sys.argv[1:3]
+    logger.info('Function "%s" called with: %s', method, sys.argv[1:])
+    #  check quantity of arguments
+    try:
+        a, b = sys.argv[1:]
+    except ValueError:
+        logger.exception('Called with: %s', sys.argv[1:])
+        sys.exit(2)
+    # check type of arguments
+    try:
+        a_int = int(a)
+        b_int = int(b)
+    except ValueError:
+        logger.exception('Got non-int values: (%s, %s)', a, b)
+        sys.exit(2)
 
+    c = MathFunction(a_int, b_int)
+    # use function for object
+    if method == 'add':
+        c.add()
+    elif method == 'subtract':
+        c.subtract()
+    elif method == 'multiply':
+        c.multiply()
+    elif method == 'divide':
+        try:
+            c.divide()
+        except ZeroDivisionError:
+            logger.exception('Tried to divide by 0')
+            sys.exit(2)
+    # log result
+    logger.info('Result: %s', c.result)
